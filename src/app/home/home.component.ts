@@ -10,9 +10,9 @@ import { createHttpObservable } from "../common/util";
     styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-
-    beginnerCourses: Course[]
-    advancedCourses: Course[]
+// blueprint for stream of data
+    beginnerCourses$: Observable<Course[]>
+    advancedCourses$: Observable<Course[]>
 
     constructor() {
 
@@ -22,14 +22,22 @@ export class HomeComponent implements OnInit {
 
         const http$ = createHttpObservable("/api/course");
 
-        const courses$ = http$.pipe(map((res) => Object.values(res["payload"])));
+        const courses$: Observable<Course[]> = http$.pipe(map(res => Object.values(res["payload"])));
    
+
+        this.beginnerCourses$ = courses$.pipe(
+            map(couses => couses
+                .filter(course => course.category == 'BEGINNER'))
+        )
+        this.advancedCourses$ = courses$ .pipe(
+            map(couses => couses.filter(course => course.category == 'ADVANCED'))
+        )
+
+
+
         courses$.subscribe(
-            // imperitive design rxjs antipattern which does not scale up
           courses => {
-              this.beginnerCourses = courses.filter(course => course.category == "BEGINNER");
-         
-              this.advancedCourses = courses.filter(course => course.category == "ADVANCED")
+           
         }, 
         // noop stands for no operation
         noop,
