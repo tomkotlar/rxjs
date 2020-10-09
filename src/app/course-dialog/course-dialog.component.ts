@@ -41,20 +41,20 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
         // valueChanges is form Observable which emits cheanges on keyup
         this.form.valueChanges
             .pipe(
-                filter(() => this.form.valid )
+                filter(() => this.form.valid ),
+                concatMap(changes => this.saveCourse(changes))
             )
-            .subscribe(changes => {
-                const saveCourse$ = fromPromise(
-                    fetch(`/api/courses/${this.course.id}`,{
-                        method: 'PUT',
-                        body: JSON.stringify(changes),
-                        headers: {'content-type': 'aplication/json'}
-                    }))
-
-                 saveCourse$.subscribe()   
-            })
+            .subscribe()
     }
 
+    saveCourse(changes) {
+       return fromPromise(
+            fetch(`/api/courses/${this.course.id}`,{
+                method: 'PUT',
+                body: JSON.stringify(changes),
+                headers: {'content-type': 'aplication/json'}
+            }))
+    }
 
 
     ngAfterViewInit() {
