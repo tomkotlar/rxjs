@@ -41,6 +41,7 @@ export class CourseComponent implements OnInit, AfterViewInit {
     ngOnInit() {
 
         const courseId = this.route.snapshot.params['id'];
+    
         this.course$ = createHttpObservable(`/api/courses/${courseId}`)
 
         this.lessons$ = createHttpObservable(`/api/lesons?courseId=${courseId}$pageSize=100`)
@@ -52,8 +53,16 @@ export class CourseComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit() {
 
+        fromEvent<any>(this.input.nativeElement, 'keyup')
+            .pipe(
+                map(event => event.target.value),
+                // timing till typing
+                debounceTime(400),
+                // no duplicate values, in case we usin shift for capitals
+                distinctUntilChanged()
 
-
+            )
+            .subscribe(console.log)
 
     }
 
