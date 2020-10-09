@@ -38,14 +38,10 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
     }
 
     ngOnInit() {
-        // valueChanges is form Observable which emits cheanges on keyup
         this.form.valueChanges
             .pipe(
                 filter(() => this.form.valid ),
-                // mergeMap - fetch in parallel the results of each call as they arrive over time 
-                // However in the concrete scenario of a save we want really to make sure that the save is completed before
-                // performing a second save. So if the order of the observable values is important then we should use concat
-                mergeMap(changes => this.saveCourse(changes))
+                concatMap(changes => this.saveCourse(changes))
             )
             .subscribe()
     }
@@ -61,8 +57,12 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
 
 
     ngAfterViewInit() {
-
-
+        fromEvent(this.saveButton.nativeElement, 'click')
+            .pipe(
+                // Ignoring new /extra/ vlaues while the current stream of values form Observable is in progress
+                exhaustMap(() => this.saveCourse(this.form.value))
+            )
+        
     }
 
 
