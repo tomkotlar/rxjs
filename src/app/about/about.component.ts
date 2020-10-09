@@ -18,9 +18,9 @@ export class AboutComponent implements OnInit {
     // const sub = interval1$.subscribe(console.log)
     // setTimeout(() => sub.unsubscribe(), 5000)
     
-    const http$ = createHttpObservable('/api/courses')
-    const sub = http$.subscribe(console.log)
-    // cancel http request
-    setTimeout(() => sub.unsubscribe(), 0)
+    // const http$ = createHttpObservable('/api/courses')
+    // const sub = http$.subscribe(console.log)
+    // // cancel http request
+    // setTimeout(() => sub.unsubscribe(), 0)
   }
 }
