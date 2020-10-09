@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit {
                 // a variable at the level of the component or a logging statement.
                 tap(() => console.log("HTTP request started")), 
                 map(res => Object.values(res["payload"])),
-                shareReplay()
+                shareReplay<Course[]>()
                 // passing the data from res to each each /new subscription/stream. prenvent multiple http call 
             );
 
