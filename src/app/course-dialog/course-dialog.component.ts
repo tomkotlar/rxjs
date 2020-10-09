@@ -42,7 +42,10 @@ export class CourseDialogComponent implements OnInit, AfterViewInit {
         this.form.valueChanges
             .pipe(
                 filter(() => this.form.valid ),
-                concatMap(changes => this.saveCourse(changes))
+                // mergeMap - fetch in parallel the results of each call as they arrive over time 
+                // However in the concrete scenario of a save we want really to make sure that the save is completed before
+                // performing a second save. So if the order of the observable values is important then we should use concat
+                mergeMap(changes => this.saveCourse(changes))
             )
             .subscribe()
     }
